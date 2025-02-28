@@ -43,7 +43,7 @@ const CachedAPI = ({ userId }) => {
             <ul>
                 {memoizedData.map((post) => (
                     <li key={post.id}>
-                        <strong> {post.id} </strong>
+                        <strong> {post.title} </strong>
                         <p> {post.body} </p>
                     </li>
                 ))}
