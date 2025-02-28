@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import "regenerator-runtime/runtime";
 
 const CachedAPI = ({ userId }) => {
 
