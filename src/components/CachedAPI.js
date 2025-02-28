@@ -1,32 +1,39 @@
-import "regenerator-runtime/runtime";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 
-const CachedAPI = () => {
-  const [data, setData] = useState(null); // Start as null to check loading state
+const CachedAPIComponent = ({ userId }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch data based on userId
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-        const result = await response.json();
-        setData(result);
-      } catch (error) {
+    setLoading(true);
+    fetch(`https://jsonplaceholder.typicode.com/posts${userId ? `?userId=${userId}` : ""}`)
+      .then((response) => response.json())
+      .then((json) => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch((error) => {
         console.error("Error fetching data:", error);
-      }
-    };
+        setLoading(false);
+      });
+  }, [userId]);
 
-    fetchData();
-  }, []);
+  // Memoize the fetched data to avoid unnecessary re-computation
+  const cachedData = useMemo(() => data, [data]);
 
   return (
     <div>
-      <h1>Posts</h1>
-      {data === null ? (
-        <p>Loading...</p> // Show "Loading..." before API response
+      <h2>Cached API Data</h2>
+      {loading ? (
+        <p>Loading...</p>
       ) : (
         <ul>
-          {data.map((post) => (
-            <li key={post.id}>{post.title}</li>
+          {cachedData.map((post) => (
+            <li key={post.id}>
+              <strong>{post.title}</strong>
+              <p>{post.body}</p>
+            </li>
           ))}
         </ul>
       )}
@@ -34,4 +41,4 @@ const CachedAPI = () => {
   );
 };
 
-export default CachedAPI;
+export default CachedAPIComponent;
