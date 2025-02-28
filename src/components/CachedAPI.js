@@ -1,9 +1,8 @@
-import "regenerator-runtime/runtime"; // Import regenerator-runtime
-
+import "regenerator-runtime/runtime";
 import React, { useEffect, useState } from "react";
 
 const CachedAPI = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null); // Start as null to check loading state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,11 +21,15 @@ const CachedAPI = () => {
   return (
     <div>
       <h1>Posts</h1>
-      <ul>
-        {data.map((post) => (
-          <li key={post.id}>{post.title}</li>
-        ))}
-      </ul>
+      {data === null ? (
+        <p>Loading...</p> // Show "Loading..." before API response
+      ) : (
+        <ul>
+          {data.map((post) => (
+            <li key={post.id}>{post.title}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
